@@ -1,5 +1,5 @@
 import sys
-from _datetime import datetime
+from datetime import datetime
 import requests
 import logging
 
@@ -9,6 +9,18 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
+def extract_from_file():
+    logging.info("Asking txt File.")
+    txt_file = input("Enter txt File Of All The Information Learned.\n")
+    logging.info("Attempting To Extract Info From File.")
+    try:
+        with open(txt_file, "r", encoding="utf-8") as f:
+            learned_today = f.read()
+    except Exception:
+        logging.error("Invalid txt File.")
+        raise
+    logging.info("Info Extracted Successfully.")
+    return learned_today
 
 def build_headers(api_key):
     return {
@@ -222,13 +234,10 @@ def grade_test(api_key, url, learned_today, questions, student_answers, answer_k
 
 def main():
     logging.info("Starting Project.")
-
-    api_key =input("Enter API Key.\n")
+    logging.info("Asking API Key.")
+    api_key = input("Enter API Key.\n")
     url = "https://openrouter.ai/api/v1/chat/completions"
-    learned_today = """
-    Enter All The Information Learned.
-    """
-
+    learned_today = extract_from_file()
     full_output = ""
     for i in range(3):
         if "Answer Key:" not in full_output:
@@ -238,6 +247,8 @@ def main():
             else:
                 logging.info("Generating Test.")
             full_output = generate_test(api_key, url, learned_today)
+        else:
+            break
 
     if "Answer Key:" in full_output:
         logging.info("Test Generated Successfully.")
