@@ -223,7 +223,7 @@ def grade_test(api_key, url, learned_today, questions, student_answers, answer_k
 def main():
     logging.info("Starting Project.")
 
-    api_key = "Enter API Key."
+    api_key =input("Enter API Key.\n")
     url = "https://openrouter.ai/api/v1/chat/completions"
     learned_today = """
     Enter All The Information Learned.
